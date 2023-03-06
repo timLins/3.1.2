@@ -1,13 +1,13 @@
-package ru.alishev.springcourse.project2boot.controllers;
+package kata.project.controller;
 
 
+import kata.project.model.User;
+import kata.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.alishev.springcourse.project2boot.models.User;
-import ru.alishev.springcourse.project2boot.services.UserService;
 
 import javax.validation.Valid;
 
@@ -23,13 +23,13 @@ public class UsersController {
     //вывод всех пользователей по начальному запросу /users
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.listUsers());
         return "users/index";
     }
     //показать пользователя по id
-    @GetMapping("/{id}")
-    public String show(@PathVariable(value = "id") int id, Model model) {
-        model.addAttribute("user", userService.findOne(id));
+    @GetMapping("/show")
+    public String show(@RequestParam(value = "id") int id, Model model) {
+        model.addAttribute("user", userService.getUser(id));
         return "/users/show";
     }
     //страница создания нового пользователя и передача post запроса на /users
@@ -43,20 +43,20 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
-        userService.save(user);
+        userService.add(user);
         return "redirect:/users";
     }
 
     //запрос на изменения пользователя по id и patch запрос /{id}
     @GetMapping("/{id}/edit")
     public String edit(Model model,@PathVariable(value = "id")int id) {
-        model.addAttribute("user", userService.findOne(id));
+        model.addAttribute("user", userService.getUser(id));
         return "/users/edit";
     }
     //получение пользователя и обновление
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute(value = "user")@Valid User user, BindingResult bindingResult,
-                         @PathVariable(value = "id")int id) {
+    @PostMapping("/update")
+    public String update(@RequestParam(value = "id")int id,@ModelAttribute(value = "user")@Valid User user,
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
@@ -64,8 +64,8 @@ public class UsersController {
         return "redirect:/users";
     }
     //удаление пользователя
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable(value = "id")int id) {
+    @PostMapping("/delete")
+    public String delete(@RequestParam(value = "id")int id) {
         userService.delete(id);
         return "redirect:/users";
     }

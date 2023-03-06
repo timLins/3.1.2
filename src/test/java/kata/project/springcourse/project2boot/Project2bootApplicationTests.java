@@ -1,4 +1,4 @@
-package ru.alishev.springcourse.project2boot;
+package kata.project.springcourse.project2boot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

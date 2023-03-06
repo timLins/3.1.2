@@ -1,4 +1,4 @@
-package ru.alishev.springcourse.project2boot;
+package kata.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
